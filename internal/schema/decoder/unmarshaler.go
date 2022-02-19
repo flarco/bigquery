@@ -8,6 +8,7 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/flarco/g"
 	"github.com/francoispqt/gojay"
 )
 
@@ -351,7 +352,7 @@ func decodeFloat(dec *gojay.Decoder) (float64, bool, error) {
 	}
 	i, err := strconv.ParseFloat(*value, 64)
 	if err != nil {
-		println("ParseFloat error -> " + err.Error())
+		g.LogError(g.Error(err))
 		return 0, false, err
 	}
 	return i, true, nil
