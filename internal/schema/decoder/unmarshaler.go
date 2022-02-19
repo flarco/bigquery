@@ -353,7 +353,7 @@ func decodeFloat(dec *gojay.Decoder) (float64, bool, error) {
 	}
 	i, err := strconv.ParseFloat(*value, 64)
 	if err != nil {
-		println(getCallerStack(1))
+		fmt.Printf("%#v", getCallerStack(1))
 		return 0, false, err
 	}
 	return i, true, nil
