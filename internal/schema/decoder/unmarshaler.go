@@ -4,11 +4,12 @@ import (
 	"encoding/base64"
 	"fmt"
 	"reflect"
+	"runtime"
 	"strconv"
+	"strings"
 	"time"
 	"unsafe"
 
-	"github.com/flarco/g"
 	"github.com/francoispqt/gojay"
 )
 
@@ -352,7 +353,7 @@ func decodeFloat(dec *gojay.Decoder) (float64, bool, error) {
 	}
 	i, err := strconv.ParseFloat(*value, 64)
 	if err != nil {
-		g.LogError(g.Error(err))
+		println(getCallerStack(1))
 		return 0, false, err
 	}
 	return i, true, nil
@@ -365,4 +366,25 @@ func decodeString(dec *gojay.Decoder) (string, bool, error) {
 		return "", false, err
 	}
 	return *value, true, nil
+}
+
+func getCallerStack(levelsUp int) []string {
+	callerArr := []string{}
+	for {
+		pc, file, no, ok := runtime.Caller(levelsUp)
+		if !ok {
+			break
+		}
+		details := runtime.FuncForPC(pc)
+		funcNameArr := strings.Split(details.Name(), ".")
+		funcName := funcNameArr[len(funcNameArr)-1]
+		fileArr := strings.Split(file, "/")
+		callStr := fmt.Sprintf("%s:%d %s", fileArr[len(fileArr)-1], no, funcName)
+		if strings.Contains(callStr, "goexit") {
+			break
+		}
+		callerArr = append(callerArr, callStr)
+		levelsUp++
+	}
+	return callerArr
 }
