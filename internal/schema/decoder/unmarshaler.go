@@ -240,7 +240,7 @@ func baseUnmarshaler(sourceType string, targetType reflect.Type) (func(dec *goja
 					if err != nil || !ok {
 						return err
 					}
-					*(*time.Time)(dest) = ts
+					*(*time.Time)(dest) = *ts
 					return nil
 				}, nil
 			}
@@ -251,7 +251,7 @@ func baseUnmarshaler(sourceType string, targetType reflect.Type) (func(dec *goja
 					if err != nil || !ok {
 						return err
 					}
-					*(**time.Time)(dest) = &ts
+					*(**time.Time)(dest) = ts
 					return nil
 				}, nil
 			}
