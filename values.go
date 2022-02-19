@@ -2,7 +2,8 @@ package bigquery
 
 import (
 	"database/sql/driver"
-	"github.com/viant/bigquery/internal/param"
+
+	"github.com/flarco/bigquery/internal/param"
 	"google.golang.org/api/bigquery/v2"
 )
 

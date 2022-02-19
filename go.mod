@@ -1,4 +1,4 @@
-module github.com/viant/bigquery
+module github.com/flarco/bigquery
 
 go 1.17
 

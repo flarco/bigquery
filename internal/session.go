@@ -1,11 +1,12 @@
 package internal
 
 import (
-	"github.com/viant/bigquery/internal/schema"
-	"github.com/viant/bigquery/internal/schema/decoder"
+	"reflect"
+
+	"github.com/flarco/bigquery/internal/schema"
+	"github.com/flarco/bigquery/internal/schema/decoder"
 	"github.com/viant/xunsafe"
 	"google.golang.org/api/bigquery/v2"
-	"reflect"
 )
 
 //Session represents decoding session

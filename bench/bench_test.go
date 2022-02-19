@@ -2,12 +2,13 @@ package bench
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	_ "github.com/viant/bigquery"
 	"os"
 	"path"
 	"reflect"
 	"testing"
+
+	_ "github.com/flarco/bigquery"
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {

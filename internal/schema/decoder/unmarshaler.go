@@ -3,13 +3,13 @@ package decoder
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/francoispqt/gojay"
 	"reflect"
 	"strconv"
 	"time"
 	"unsafe"
-)
 
+	"github.com/francoispqt/gojay"
+)
 
 //Unmarshaler represnets unmarshaler
 type Unmarshaler interface {
@@ -19,8 +19,6 @@ type Unmarshaler interface {
 
 //newUnmarshaler represents a marshaler constructor
 type newUnmarshaler func(ptr interface{}) Unmarshaler
-
-
 
 var timeType = reflect.TypeOf(time.Time{})
 var timePtrType = reflect.TypeOf(&time.Time{})
@@ -213,11 +211,11 @@ func baseUnmarshaler(sourceType string, targetType reflect.Type) (func(dec *goja
 
 		case reflect.String:
 			return func(dec *gojay.Decoder, dest unsafe.Pointer) error {
-				ts, ok, err := decodeTime(dec)
+				ts, ok, err := decodeString(dec)
 				if err != nil || !ok {
 					return err
 				}
-				*(*string)(dest) = ts.Format(time.RFC3339Nano)
+				*(*string)(dest) = ts
 				return nil
 			}, nil
 		case reflect.Interface:
@@ -353,6 +351,7 @@ func decodeFloat(dec *gojay.Decoder) (float64, bool, error) {
 	}
 	i, err := strconv.ParseFloat(*value, 64)
 	if err != nil {
+		println("ParseFloat error -> " + err.Error())
 		return 0, false, err
 	}
 	return i, true, nil

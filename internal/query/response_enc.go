@@ -4,7 +4,7 @@ package query
 
 import (
 	"github.com/francoispqt/gojay"
-	"github.com/viant/bigquery/internal"
+	"github.com/flarco/bigquery/internal"
 	"google.golang.org/api/bigquery/v2"
 	"reflect"
 	"strconv"

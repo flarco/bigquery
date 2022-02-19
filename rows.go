@@ -3,12 +3,13 @@ package bigquery
 import (
 	"database/sql/driver"
 	"fmt"
-	"github.com/francoispqt/gojay"
-	"github.com/viant/bigquery/internal"
-	"github.com/viant/bigquery/internal/query"
-	"google.golang.org/api/bigquery/v2"
 	"io"
 	"reflect"
+
+	"github.com/flarco/bigquery/internal"
+	"github.com/flarco/bigquery/internal/query"
+	"github.com/francoispqt/gojay"
+	"google.golang.org/api/bigquery/v2"
 )
 
 //Rows abstraction implements database/sql driver.Rows interface

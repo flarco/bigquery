@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"github.com/francoispqt/gojay"
-	"github.com/viant/bigquery/internal"
-	"google.golang.org/api/bigquery/v2"
-	"google.golang.org/api/googleapi"
 	"io"
 	"net/http"
 	"unsafe"
+
+	"github.com/flarco/bigquery/internal"
+	"github.com/francoispqt/gojay"
+	"google.golang.org/api/bigquery/v2"
+	"google.golang.org/api/googleapi"
 )
 
 //ResultsCall represents query results call
@@ -94,7 +95,7 @@ func (c *nativeCall) httpClient() *http.Client {
 
 func (c *nativeCall) doRequest(alt string) (*http.Response, error) {
 	reqHeaders := make(http.Header)
-	reqHeaders.Set("x-goog-api-client", "viant/bigquery")
+	reqHeaders.Set("x-goog-api-client", "flarco/bigquery")
 	for k, v := range c.header_ {
 		reqHeaders[k] = v
 	}

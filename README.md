@@ -1,7 +1,7 @@
 # BigQuery SQL Driver
 
-[![BigQuery database/sql driver in Go.](https://goreportcard.com/badge/github.com/viant/bigquery)](https://goreportcard.com/report/github.com/viant/bigquery)
-[![GoDoc](https://godoc.org/github.com/viant/bigquery?status.svg)](https://godoc.org/github.com/viant/bigquery)
+[![BigQuery database/sql driver in Go.](https://goreportcard.com/badge/github.com/flarco/bigquery)](https://goreportcard.com/report/github.com/flarco/bigquery)
+[![GoDoc](https://godoc.org/github.com/flarco/bigquery?status.svg)](https://godoc.org/github.com/flarco/bigquery)
 
 This library is compatible with Go 1.17+
 
@@ -45,7 +45,7 @@ import (
     "fmt"
     "context"
     "log"
-   _ "github.com/viant/bigquery"
+   _ "github.com/flarco/bigquery"
 )
 
 
@@ -118,7 +118,7 @@ In both case database/sql driver is faster and allocate way less memory than [GC
 ```go
 goos: darwin
 goarch: amd64
-pkg: github.com/viant/bigquery/bench
+pkg: github.com/flarco/bigquery/bench
 cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
 Benchmark_Primitive_GCPClient
 database/gcp: primitive types 3.918388531s

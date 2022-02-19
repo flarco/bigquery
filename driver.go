@@ -11,7 +11,7 @@ import (
 type Driver struct{}
 
 // Open new Connection.
-// See https://github.com/viant/bigquery#dsn-data-source-name for how
+// See https://github.com/flarco/bigquery#dsn-data-source-name for how
 // the DSN string is formatted
 func (d Driver) Open(dsn string) (driver.Conn, error) {
 	cfg, err := ParseDSN(dsn)
