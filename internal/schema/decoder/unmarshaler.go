@@ -11,6 +11,7 @@ import (
 	"unsafe"
 
 	"github.com/francoispqt/gojay"
+	"github.com/spf13/cast"
 )
 
 //Unmarshaler represnets unmarshaler
@@ -306,14 +307,21 @@ func baseUnmarshaler(sourceType string, targetType reflect.Type) (func(dec *goja
 	return nil, fmt.Errorf("unsupporter binding type %v to %s", sourceType, targetType.String())
 }
 
-func decodeTime(dec *gojay.Decoder) (time.Time, bool, error) {
-	f, ok, err := decodeFloat(dec)
-	if err != nil || !ok {
-		return time.Time{}, false, err
+func decodeTime(dec *gojay.Decoder) (*time.Time, bool, error) {
+	var value *string
+	err := dec.StringNull(&value)
+	if err != nil || value == nil {
+		return nil, false, err
 	}
-	timestamp := int64(f*1000000) * int64(time.Microsecond)
-	ts := time.Unix(0, timestamp)
-	return ts, true, nil
+	if value == nil {
+		return nil, false, nil
+	}
+
+	t, err := parseTime(*value)
+	if err != nil {
+		return nil, false, err
+	}
+	return &t, true, nil
 }
 
 func decodeInt(dec *gojay.Decoder) (int, bool, error) {
@@ -387,4 +395,77 @@ func getCallerStack(levelsUp int) []string {
 		levelsUp++
 	}
 	return callerArr
+}
+
+var dateLayoutCache = ""
+var dateLayouts = []string{
+	"2006-01-02",
+	"2006-01-02 15:04:05",
+	"2006-01-02 15:04:05.000",
+	"2006-01-02T15:04:05.000Z",
+	"02-Jan-06",
+	"02-Jan-06 15:04:05",
+	"02-Jan-06 03:04:05 PM",
+	"02-Jan-06 03.04.05.000000 PM",
+	"2006-01-02T15:04:05-0700",
+	time.RFC3339,
+	"2006-01-02T15:04:05",  // iso8601 without timezone
+	"2006-01-02T15:04:05Z", // iso8601 with timezone
+	time.RFC1123Z,
+	time.RFC1123,
+	time.RFC822Z,
+	time.RFC822,
+	time.RFC850,
+	time.ANSIC,
+	time.UnixDate,
+	time.RubyDate,
+	"2006-01-02 15:04:05.999999999 -0700 MST", // Time.String()
+	"02 Jan 2006",
+	"2006-01-02T15:04:05-0700", // RFC3339 without timezone hh:mm colon
+	"2006-01-02 15:04:05 -07:00",
+	"2006-01-02 15:04:05 -0700",
+	"2006-01-02 15:04:05Z07:00", // RFC3339 without T
+	"2006-01-02 15:04:05Z0700",  // RFC3339 without T or timezone hh:mm colon
+	"2006-01-02 15:04:05 MST",
+	time.Kitchen,
+	time.Stamp,
+	time.StampMilli,
+	time.StampMicro,
+	time.StampNano,
+	"1/2/06",
+	"01/02/06",
+	"1/2/2006",
+	"01/02/2006",
+	"01/02/2006 15:04",
+	"01/02/2006 15:04:05",
+	"01/02/2006 03:04:05 PM", // "8/17/1994 12:00:00 AM"
+	"01/02/2006 03:04:05 PM", // "8/17/1994 12:00:00 AM"
+	"2006-01-02 15:04:05.999999999-07:00",
+	"2006-01-02T15:04:05.999999999-07:00",
+	"2006-01-02 15:04:05.999999999",
+	"2006-01-02T15:04:05.999999999",
+	"2006-01-02 15:04",
+	"2006-01-02T15:04",
+	"2006/01/02 15:04:05",
+}
+
+func parseTime(i interface{}) (t time.Time, err error) {
+	s := cast.ToString(i)
+
+	// date layouts to try out
+	for _, layout := range dateLayouts {
+		// use cache to decrease parsing computation next iteration
+		if dateLayoutCache != "" {
+			t, err = time.Parse(dateLayoutCache, s)
+			if err == nil {
+				return
+			}
+		}
+		t, err = time.Parse(layout, s)
+		if err == nil {
+			dateLayoutCache = layout
+			return
+		}
+	}
+	return
 }
