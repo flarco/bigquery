@@ -308,16 +308,28 @@ func baseUnmarshaler(sourceType string, targetType reflect.Type) (func(dec *goja
 }
 
 func decodeTime(dec *gojay.Decoder) (*time.Time, bool, error) {
-	var value *string
-	err := dec.StringNull(&value)
-	if err != nil || value == nil {
+	var valueFlt *float64
+	err := dec.Float64Null(&valueFlt)
+	if err == nil {
+		f, ok, err := decodeFloat(dec)
+		if err != nil || !ok {
+			return nil, false, err
+		}
+		timestamp := int64(f*1000000) * int64(time.Microsecond)
+		ts := time.Unix(0, timestamp)
+		return &ts, true, nil
+	}
+
+	var valueStr *string
+	err = dec.StringNull(&valueStr)
+	if err != nil || valueStr == nil {
 		return nil, false, err
 	}
-	if value == nil {
+	if valueStr == nil {
 		return nil, false, nil
 	}
 
-	t, err := parseTime(*value)
+	t, err := parseTime(*valueStr)
 	if err != nil {
 		return nil, false, err
 	}
